@@ -4,13 +4,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+CHANNEL_ID = 1526268342749368330
+GUILD_ID = 1496883454011248661
+
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='.', intents=intents)
 
 @bot.event
 async def on_ready():
-    await bot.tree.sync()
+    await bot.tree.sync(guild=discord.Object(id=GUILD_ID))
     print(f"i can see you")
     
 async def main():
@@ -21,7 +24,7 @@ async def main():
     
 @bot.event
 async def on_message(message: discord.Message):
-    channel = bot.get_channel(1526268342749368330)
+    channel = bot.get_channel(CHANNEL_ID)
     
     if message.channel == channel:
         await message.delete()
