@@ -47,7 +47,11 @@ class Play(commands.Cog):
         voice_channel = interaction.user.voice.channel
 
         if voice_channel is None:
-            await interaction.followup.send("Вы обязаны быть в войсе")
+            await interaction.followup.send(discord.Embed(
+                color=0x000000, 
+                title="Ошибка", 
+                description="Вы обязаны быть в войсе"
+            ))
             return
 
         voice_client = interaction.guild.voice_client
@@ -69,7 +73,11 @@ class Play(commands.Cog):
         tracks = results.get("entries", [])
 
         if tracks is None:
-            await interaction.followup.send("Ничего не найдено")
+            await interaction.followup.send(discord.Embed(
+                color=0x000000, 
+                title="Ошибка", 
+                description="Ничего не найдено"
+            ))
             return
 
         first_track = tracks[0]
@@ -83,9 +91,19 @@ class Play(commands.Cog):
         self.SONG_QUEUES[guild_id].append((audio_url, title))
 
         if voice_client.is_playing() or voice_client.is_paused():
-            await interaction.followup.send(f"Добавлено в очередь: **{title}**")
+            await interaction.followup.send(discord.Embed(
+                color=0x000000, 
+                title="Готово", 
+                description=f"""Добавлено в очередь:
+{title}"""
+            ))
         else:
-            await interaction.followup.send(f"Сейчас играет: **{title}**")
+            await interaction.followup.send(discord.Embed(
+                color=0x000000, 
+                title="Продолжаем", 
+                description=f"""Сейчас играет:
+{title}"""
+            ))
             await self.play_next_song(voice_client, guild_id, interaction.channel)
 
     @discord.app_commands.command(name="stop", description="Остановить всё")
@@ -94,9 +112,17 @@ class Play(commands.Cog):
         voice_client = interaction.guild.voice_client
 
         if not voice_client or not voice_client.is_connected():
-            return await interaction.response.send_message("Бот не в канале")
+            return await interaction.response.send_message(discord.Embed(
+                color=0x000000, 
+                title="Ошибка", 
+                description="Бот не в канале"
+            ))
 
-        await interaction.followup.send("Остановлено")
+        await interaction.followup.send(discord.Embed(
+                color=0x000000, 
+                title="Готово", 
+                description="Остановлено"
+            ))
         
         guild_id_str = str(interaction.guild_id)
         if guild_id_str in self.SONG_QUEUES:

@@ -10,13 +10,25 @@ class Pause(commands.Cog):
         voice_client = interaction.guild.voice_client
 
         if voice_client is None:
-            return await interaction.response.send_message("Бот не в канале")
+            return await interaction.response.send_message(discord.Embed(
+                color=0x000000, 
+                title="Ошибка", 
+                description="Бот не в канале"
+            ))
 
         if not voice_client.is_playing():
-            return await interaction.response.send_message("Сейчас ничего не играет")
+            return await interaction.response.send_message(discord.Embed(
+                color=0x000000, 
+                title="Ошибка", 
+                description="Сейчас ничего не играет"
+            ))
 
         voice_client.pause()
-        await interaction.response.send_message("Поставил на паузу")
+        await interaction.response.send_message(discord.Embed(
+            color=0x000000, 
+            title="Готово", 
+            description="Поставил на паузу, чувак"
+        ))
         
 async def setup(bot: commands.Bot):
     await bot.add_cog(Pause(bot))
