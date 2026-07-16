@@ -13,7 +13,7 @@ async def on_ready():
     await bot.tree.sync()
     print(f"i can see you")
     
-async def setup():
+async def main():
     await bot.load_extension("cogs.music.play")
     await bot.load_extension("cogs.music.pause")
     await bot.load_extension("cogs.music.resume")
@@ -31,6 +31,9 @@ async def on_message(message: discord.Message):
     await bot.process_commands(message)
 
 if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())
+    
     with open("token.txt", 'r') as file:
         token = file.read()
         bot.run(token)

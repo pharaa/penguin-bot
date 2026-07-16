@@ -6,7 +6,7 @@ class Resume(commands.Cog):
         self.bot = bot
         
     @discord.app_commands.command(name="resume", description="Возобновить воспроизведение")
-    async def resume(interaction: discord.Interaction):
+    async def resume(self, interaction: discord.Interaction):
         voice_client = interaction.guild.voice_client
 
         if voice_client is None:

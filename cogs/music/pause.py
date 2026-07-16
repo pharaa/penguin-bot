@@ -6,7 +6,7 @@ class Pause(commands.Cog):
         self.bot = bot
         
     @discord.app_commands.command(name="pause", description="Поставить на паузу")
-    async def pause(interaction: discord.Interaction):
+    async def pause(self, interaction: discord.Interaction):
         voice_client = interaction.guild.voice_client
 
         if voice_client is None:
