@@ -9,13 +9,13 @@ class Skip(commands.Cog):
     async def skip(self, interaction: discord.Interaction):
         if interaction.guild.voice_client and (interaction.guild.voice_client.is_playing() or interaction.guild.voice_client.is_paused()):
             interaction.guild.voice_client.stop()
-            await interaction.response.send_message(discord.Embed(
+            await interaction.response.send_message(embed=discord.Embed(
                 color=0x000000, 
                 title="Готово", 
                 description="Песня скипнута чувак"
             ))
         else:
-            await interaction.response.send_message(discord.Embed(
+            await interaction.response.send_message(embed=discord.Embed(
                 color=0x000000, 
                 title="Ошибка", 
                 description="Сейчас ничего не играет"

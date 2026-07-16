@@ -47,7 +47,7 @@ class Play(commands.Cog):
         voice_channel = interaction.user.voice.channel
 
         if voice_channel is None:
-            await interaction.followup.send(discord.Embed(
+            await interaction.followup.send(embed=discord.Embed(
                 color=0x000000, 
                 title="Ошибка", 
                 description="Вы обязаны быть в войсе"
@@ -73,7 +73,7 @@ class Play(commands.Cog):
         tracks = results.get("entries", [])
 
         if tracks is None:
-            await interaction.followup.send(discord.Embed(
+            await interaction.followup.send(embed=discord.Embed(
                 color=0x000000, 
                 title="Ошибка", 
                 description="Ничего не найдено"
@@ -91,14 +91,14 @@ class Play(commands.Cog):
         self.SONG_QUEUES[guild_id].append((audio_url, title))
 
         if voice_client.is_playing() or voice_client.is_paused():
-            await interaction.followup.send(discord.Embed(
+            await interaction.followup.send(embed=discord.Embed(
                 color=0x000000, 
                 title="Готово", 
                 description=f"""Добавлено в очередь:
 {title}"""
             ))
         else:
-            await interaction.followup.send(discord.Embed(
+            await interaction.followup.send(embed=discord.Embed(
                 color=0x000000, 
                 title="Продолжаем", 
                 description=f"""Сейчас играет:
@@ -112,13 +112,13 @@ class Play(commands.Cog):
         voice_client = interaction.guild.voice_client
 
         if not voice_client or not voice_client.is_connected():
-            return await interaction.response.send_message(discord.Embed(
+            return await interaction.response.send_message(embed=discord.Embed(
                 color=0x000000, 
                 title="Ошибка", 
                 description="Бот не в канале"
             ))
 
-        await interaction.followup.send(discord.Embed(
+        await interaction.followup.send(embed=discord.Embed(
                 color=0x000000, 
                 title="Готово", 
                 description="Остановлено"

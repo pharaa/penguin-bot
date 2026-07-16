@@ -10,21 +10,21 @@ class Resume(commands.Cog):
         voice_client = interaction.guild.voice_client
 
         if voice_client is None:
-            return await interaction.response.send_message(discord.Embed(
+            return await interaction.response.send_message(embed=discord.Embed(
                 color=0x000000, 
                 title="Ошибка", 
                 description="Бот не в канале"
             ))
 
         if not voice_client.is_paused():
-            return await interaction.response.send_message(discord.Embed(
+            return await interaction.response.send_message(embed=discord.Embed(
                 color=0x000000, 
                 title="Ошибка", 
                 description="Музыка не на паузе"
             ))
 
         voice_client.resume()
-        await interaction.response.send_message(discord.Embed(
+        await interaction.response.send_message(embed=discord.Embed(
                 color=0x000000, 
                 title="Готово", 
                 description="Воспроизведение продолжается, чувак"
