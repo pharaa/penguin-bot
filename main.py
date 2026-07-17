@@ -13,11 +13,25 @@ bot = commands.Bot(command_prefix='.', intents=intents)
 
 @bot.event
 async def on_ready():
-    await bot.load_extension("cogs.music.play")
-    await bot.load_extension("cogs.music.pause")
-    await bot.load_extension("cogs.music.resume")
-    await bot.load_extension("cogs.music.skip")
-    await bot.tree.sync(guild=discord.Object(id=GUILD_ID))
+    bot.tree.clear_commands(guild=None)
+    try:
+        await bot.tree.sync()
+        print("Глобальные команды успешно стерты из Discord.")
+    except Exception as e:
+        print(f"Не удалось очистить глобальные команды: {e}")
+
+    try:
+        await bot.load_extension("cogs.music.play")
+        await bot.load_extension("cogs.music.pause")
+        await bot.load_extension("cogs.music.resume")
+        await bot.load_extension("cogs.music.skip")
+        print("Коги успешно загружены.")
+    except discord.errors.ExtensionAlreadyLoaded:
+        print("Коги уже были загружены.")
+
+    guild = discord.Object(id=GUILD_ID)
+    bot.tree.copy_global_to(guild=guild)
+    await bot.tree.sync(guild=guild)
     print(f"i can see you")
     
 @bot.event
