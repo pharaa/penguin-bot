@@ -4,19 +4,22 @@ from collections import deque
 import asyncio
 import yt_dlp
 
+
 async def search_ytdlp_async(query, ydl_opts):
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(None, lambda: _extract(query, ydl_opts))
+
 
 def _extract(query, ydl_opts):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         return ydl.extract_info(query, download=False)
 
+
 class Play(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.SONG_QUEUES = {}
-        
+
     async def play_next_song(self, voice_client: discord.VoiceClient, guild_id, channel):
         if self.SONG_QUEUES[guild_id]:
             audio_url, title = self.SONG_QUEUES[guild_id].popleft()
@@ -26,7 +29,7 @@ class Play(commands.Cog):
                 "options": "-vn -c:a libopus -b:a 96k",
             }
 
-            source = discord.FFmpegOpusAudio(audio_url, **ffmpeg_options, executable="/bin/ffmpeg")
+            source = discord.FFmpegOpusAudio(audio_url, **ffmpeg_options, executable="bin/ffmpeg")
 
             def after_play(error):
                 if error:
@@ -40,7 +43,7 @@ class Play(commands.Cog):
             self.SONG_QUEUES[guild_id] = deque()
 
     @discord.app_commands.command(name="play", description="Подключиться, воспроизвести трек, добавить трек в очередь")
-    @discord.app_commands.describe(song_query="Search query")
+    @discord.app_commands.describe(song_query="Ссылка (YouTube/SoundCloud)")
     async def play(self, interaction: discord.Interaction, song_query: str):
         await interaction.response.defer()
 
@@ -48,8 +51,8 @@ class Play(commands.Cog):
 
         if voice_channel is None:
             await interaction.followup.send(embed=discord.Embed(
-                color=0x000000, 
-                title="Ошибка", 
+                color=0x000000,
+                title="Ошибка",
                 description="Вы обязаны быть в войсе"
             ))
             return
@@ -68,20 +71,42 @@ class Play(commands.Cog):
             "youtube_include_hls_manifest": False,
         }
 
-        query = "ytsearch1: " + song_query
-        results = await search_ytdlp_async(query, ydl_options)
-        tracks = results.get("entries", [])
+        if song_query.startswith(('http://', 'https://')):
+            query = song_query
+        else:
+            query = f"ytsearch1: {song_query}"
 
-        if tracks is None:
+        try:
+            results = await search_ytdlp_async(query, ydl_options)
+        except Exception as e:
             await interaction.followup.send(embed=discord.Embed(
-                color=0x000000, 
-                title="Ошибка", 
+                color=0x000000,
+                title="Ошибка",
+                description=f"Не удалось получить трек: {e}"
+            ))
+            return
+
+        if not results:
+            await interaction.followup.send(embed=discord.Embed(
+                color=0x000000,
+                title="Ошибка",
                 description="Ничего не найдено"
             ))
             return
 
-        first_track = tracks[0]
-        audio_url = first_track["url"]
+        if "entries" in results:
+            if not results["entries"]:
+                await interaction.followup.send(embed=discord.Embed(
+                    color=0x000000,
+                    title="Ошибка",
+                    description="Ничего не найдено"
+                ))
+                return
+            first_track = results["entries"][0]
+        else:
+            first_track = results
+
+        audio_url = first_track.get("url")
         title = first_track.get("title", "Untitled")
 
         guild_id = str(interaction.guild_id)
@@ -92,17 +117,15 @@ class Play(commands.Cog):
 
         if voice_client.is_playing() or voice_client.is_paused():
             await interaction.followup.send(embed=discord.Embed(
-                color=0x000000, 
-                title="Готово", 
-                description=f"""Добавлено в очередь:
-{title}"""
+                color=0x000000,
+                title="Готово",
+                description=f"Добавлено в очередь:\n{title}"
             ))
         else:
             await interaction.followup.send(embed=discord.Embed(
-                color=0x000000, 
-                title="Продолжаем", 
-                description=f"""Сейчас играет:
-{title}"""
+                color=0x000000,
+                title="Продолжаем",
+                description=f"Сейчас играет:\n{title}"
             ))
             await self.play_next_song(voice_client, guild_id, interaction.channel)
 
@@ -112,26 +135,27 @@ class Play(commands.Cog):
         voice_client = interaction.guild.voice_client
 
         if not voice_client or not voice_client.is_connected():
-            return await interaction.response.send_message(embed=discord.Embed(
-                color=0x000000, 
-                title="Ошибка", 
+            return await interaction.followup.send(embed=discord.Embed(
+                color=0x000000,
+                title="Ошибка",
                 description="Бот не в канале"
             ))
 
         await interaction.followup.send(embed=discord.Embed(
-                color=0x000000, 
-                title="Готово", 
-                description="Остановлено"
-            ))
-        
+            color=0x000000,
+            title="Готово",
+            description="Остановлено"
+        ))
+
         guild_id_str = str(interaction.guild_id)
         if guild_id_str in self.SONG_QUEUES:
             self.SONG_QUEUES[guild_id_str].clear()
 
         if voice_client.is_playing() or voice_client.is_paused():
             voice_client.stop()
-            
+
         await voice_client.disconnect()
-            
+
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(Play(bot))
