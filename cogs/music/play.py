@@ -29,7 +29,7 @@ class Play(commands.Cog):
                 "options": "-vn -c:a libopus -b:a 96k",
             }
 
-            source = discord.FFmpegOpusAudio(audio_url, **ffmpeg_options, executable="bin/ffmpeg")
+            source = discord.FFmpegOpusAudio(audio_url, **ffmpeg_options, executable="/bin/ffmpeg")
 
             def after_play(error):
                 if error:
