@@ -13,6 +13,8 @@ bot = commands.Bot(command_prefix='.', intents=intents)
 
 @bot.event
 async def on_ready():
+    activity = discord.Activity(type=discord.ActivityType.competing, name="dsc.gg/fatpenguins")
+    await bot.change_presence(status=discord.Status.online, activity=activity)
     await bot.load_extension("cogs.music.play")
     await bot.load_extension("cogs.music.pause")
     await bot.load_extension("cogs.music.resume")
