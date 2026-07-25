@@ -26,7 +26,7 @@ class Play(commands.Cog):
 
             ffmpeg_options = {
                 "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
-                "options": "-vn -c:a libopus -b:a 96k",
+                "options": "-vn -c:a libopus -b:a 96k -vbr off",
             }
 
             source = discord.FFmpegOpusAudio(audio_url, **ffmpeg_options, executable="/bin/ffmpeg")
