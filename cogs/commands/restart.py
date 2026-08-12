@@ -9,17 +9,17 @@ ALLOWED_USER_ID = 123456789012345678 # айди тех кто может пер�
 class Restart(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    @app_commands.command(name="restart", description="Перезапустить бота")
+        
+@discord.app_commands.command(name="restart", description="Перезапустить бота")
     async def restart_bot(self, interaction: discord.Interaction):
         if interaction.user.id != ALLOWED_USER_ID:
             await interaction.response.send_message("У вас нет прав для перезапуска бота.", ephemeral=True)
             return
 
-        await interaction.response.send_message("Бот уходит в рестарт... 🔄", ephemeral=True)
-
-        os.execv(sys.executable, [sys.executable] + sys.argv)
-
+        await interaction.response.send_message("Перезапуск", ephemeral=True)
+        
+        await self.bot.close()
+        sys.exit(0)
 
 async def setup(bot):
     await bot.add_cog(Restart(bot))
