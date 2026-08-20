@@ -1,57 +1,16 @@
-# Penguin Bot
+# Главный пингвин
 
-A simple, lightweight Discord bot designed for music playback, chat archiving, antispam tools, and channel management. Built using `discord.py` and `yt-dlp`.
+Простой self-hosted Discord-бот для музыки с защитой от спам-ботов через отдельный канал.
 
-## Features
-- **High-Quality Music:** Play and stream audio tracks directly from **YouTube** and **SoundCloud**.
-- **Queue System:** Automatically manage music queues with seamless integration for pausing, skipping, resuming, and stopping tracks.
-- **Server Moderation:** Basic antispam controls and specialized channel auto-moderation tools.
+## Конфигурация
 
-## Prerequisites
-Before you begin, make sure you have installed:
-- **Python 3.10+**
-- **FFmpeg:** Installed on your system and added to your environment's PATH variable (or reference the local path in `play.py`).
+В **token.txt** пропишите токен своего discord-бота.
 
-## Installation & Setup
+В файле **main.py** найдите две переменные:
+* GUILD_ID
+* CHANNEL_ID
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/pharaa/penguin-bot.git
-   cd penguin-bot
-   ```
+В GUILD_ID пропишите ID вашего Discord-сервера.
+В CHANNEL_ID пропишите ID канала для автоматического бана юзеров, написавших туда сообщение.
 
-2. **Create and Activate a Virtual Environment:**
-   ```bash
-   python -m venv .venv
-   
-   # On Windows:
-   .venv\Scripts\activate
-   
-   # On Linux / macOS:
-   source .venv/bin/activate
-   ```
-
-3. **Install Required Packages:**
-   Install `discord.py` with voice dependencies along with audio streaming and encryption packages:
-   ```bash
-   pip install -U "discord.py[voice]" yt-dlp python-dotenv pynacl davey
-   ```
-
-4. **Add Your Bot Token:**
-   Create a file named `token.txt` in the root directory of the project and insert your Discord Bot Token inside it:
-   ```text
-   YOUR_DISCORD_BOT_TOKEN_GOES_HERE
-   ```
-
-5. **Configure Server Settings:**
-   Open `main.py` and replace the placeholder variables with your actual Discord server and targeted channel IDs:
-   ```python
-   CHANNEL_ID = 1518733975320006808
-   GUILD_ID = 1518017112738627696
-   ```
-
-## Running the Bot
-Once everything is configured, start your bot by running:
-```bash
-python main.py
-```
+Перед запуском бота убедитесь, что канал, ID которого вы прописали, доступен для всех и туда можно отправлять сообщения с картинками. По желанию можете написать гневное сообщение с убедительной просьбой не писать в этот канал.
