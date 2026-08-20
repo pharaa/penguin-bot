@@ -19,7 +19,6 @@ async def on_ready():
     await bot.load_extension("cogs.music.pause")
     await bot.load_extension("cogs.music.resume")
     await bot.load_extension("cogs.music.skip")
-    await bot.load_extension("cogs.captcha.captcha")
     await bot.load_extension("cogs.commands.clear")
     await bot.load_extension("cogs.commands.restart")
     await bot.tree.sync(guild=discord.Object(id=GUILD_ID))
