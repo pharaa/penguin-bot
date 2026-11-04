@@ -20,7 +20,8 @@ async def on_ready():
     await bot.load_extension("cogs.music.resume")
     await bot.load_extension("cogs.music.skip")
     await bot.load_extension("cogs.commands.clear")
-    await bot.load_extension("cogs.commands.restart")
+    await bot.load_extension("cogs.commands.picture")
+    bot.tree.copy_global_to(guild=discord.Object(id=GUILD_ID))
     await bot.tree.sync(guild=discord.Object(id=GUILD_ID))
     print(f"i can see you")
     
