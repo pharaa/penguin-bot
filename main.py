@@ -1,11 +1,8 @@
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
-
-load_dotenv()
 
 CHANNEL_ID = 1526268342749368330
-GUILD_ID = 1496883454011248661
+GUILD_ID = 1530211134244786186
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -38,5 +35,6 @@ async def on_message(message: discord.Message):
 
 if __name__ == "__main__":
     with open("token.txt", 'r') as file:
-        token = file.read()
-        bot.run(token)
+        token = file.readline().strip()
+        bot.search_api_key = file.readline().strip()
+    bot.run(token)
